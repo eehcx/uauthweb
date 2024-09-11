@@ -1,0 +1,30 @@
+/*FUENTES*/
+
+/*Titulos y headers*/
+@import url('https://fonts.googleapis.com/css2?family=SUSE:wght@100..800&display=swap');
+/*Textos y UI*/
+@import url('https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap');
+
+html, body {
+    overflow-x: hidden;  
+    overflow-y: auto;
+    
+    background-color: #090909;
+    -webkit-font-smoothing: antialiased;
+    box-sizing: border-box;
+}
+
+#root {
+    background-color: #090909;
+    width: 100vw; 
+    height: 100vh;
+    overflow-x: hidden;
+}
+
+/*Page Fonts*/
+
+.font-logo{font-family: "SUSE", sans-serif;}
+.font-overview{font-family: "Inter", sans-serif;}
+
+/*Background*/
+.bg-09{background-color: #090909;}
