@@ -1,12 +1,14 @@
 import { useState, useEffect } from "react"
 import { Text, Divider } from "@chakra-ui/react"
 import { ChevronRightIcon, HamburgerIcon, CloseIcon } from '@chakra-ui/icons'
+import { useSelector } from "react-redux"
 
 import '../styles/base.styles.css'
 import logo from '../../assets/react.svg'
 
-function LayoutsComponent() {
+function NavbarComponent() {
     const [state, setState] = useState(false)
+    const Auth = useSelector(state => state.auth)
 
     const navigation = [
         { title: "Acerca", path: "javascript:void(0)" },
@@ -62,8 +64,8 @@ function LayoutsComponent() {
                                 })
                             }
                             <li>
-                                <a href="/console" className="flex items-center justify-center gap-x-1 py-2 px-4 text-white font-semibold bg-blue-600 font-overview hover:bg-blue-500 active:bg-blue-700 duration-150 rounded-full md:inline-flex">
-                                    Dashboard
+                                <a href={Auth.url}className="flex items-center justify-center gap-x-1 py-2 px-4 text-white font-semibold bg-blue-600 font-overview hover:bg-blue-500 active:bg-blue-700 duration-150 rounded-full md:inline-flex">
+                                    {Auth.title}
                                     <ChevronRightIcon />
                                 </a>
                             </li>
@@ -76,4 +78,4 @@ function LayoutsComponent() {
     )
 }
 
-export default LayoutsComponent
+export default NavbarComponent
