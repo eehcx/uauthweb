@@ -8,7 +8,7 @@ import logo from '../../assets/react.svg'
 
 function NavbarComponent() {
     const [state, setState] = useState(false)
-    const Auth = useSelector(state => state.auth)
+    const ButtonBar = useSelector(state => state.user)
 
     const navigation = [
         { title: "Acerca", path: "javascript:void(0)" },
@@ -64,8 +64,8 @@ function NavbarComponent() {
                                 })
                             }
                             <li>
-                                <a href={Auth.url}className="flex items-center justify-center gap-x-1 py-2 px-4 text-white font-semibold bg-blue-600 font-overview hover:bg-blue-500 active:bg-blue-700 duration-150 rounded-full md:inline-flex">
-                                    {Auth.title}
+                                <a href={ButtonBar.url}className="flex items-center justify-center gap-x-1 py-2 px-4 text-white font-semibold bg-blue-600 font-overview hover:bg-blue-500 active:bg-blue-700 duration-150 rounded-full md:inline-flex">
+                                    {ButtonBar.title}
                                     <ChevronRightIcon />
                                 </a>
                             </li>

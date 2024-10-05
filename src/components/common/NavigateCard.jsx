@@ -1,7 +1,7 @@
 import { Text, Heading, LinkBox, LinkOverlay } from "@chakra-ui/react"
 import { IoServerOutline } from "react-icons/io5";
 
-const NavigateCard =({link, name, id})=> {
+const NavigateCard =({link, name, id, onClick})=> {
     return(
         <LinkBox
             as="article"
@@ -18,6 +18,7 @@ const NavigateCard =({link, name, id})=> {
             justifyContent="center"
             alignItems="baseline"
             boxShadow='2xl'
+            onClick={onClick}
         >
             <div style={{ display: 'flex', flexDirection: 'row', alignItems: 'center' }}>
                 <IoServerOutline style={{ marginRight: 10 }} size={26} />

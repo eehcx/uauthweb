@@ -1,23 +1,22 @@
-import { Box, StatGroup, Stat, StatLabel, StatNumber, StatHelpText, StatArrow, Card, CardBody,  Image, Stack, Heading, Text, CardFooter, Button } from "@chakra-ui/react"
 import { IoGitCompare, IoLogoGithub, IoCloudUpload } from "react-icons/io5";
 import '../styles/base.styles.css'
+import { useSelector } from "react-redux";
 
-const ArticleCard = ({alt, src, title, description}) =>{
+const ArticleCard = ({alt, src, title, description, href}) => {
     return(
-        <article class="overflow-hidden rounded-xl shadow transition hover:shadow-xl">
+        <article className="overflow-hidden rounded-xl shadow transition hover:shadow-xl">
             <img
                 alt={alt}
                 src={src}
-                class=" h-36 w-full object-cover"
+                className=" h-36 w-full object-cover"
             />
 
-            <div class="bg-white p-4 sm:p-6">
-
-                <a href="#">
-                    <h3 class="mt-0.5 text-lg font-overview font-medium text-gray-900">{title}</h3>
+            <div className="bg-slate-100 p-4 sm:p-6">
+                <a href={href}>
+                    <h3 className="mt-0.5 text-lg font-overview font-medium text-gray-900">{title}</h3>
                 </a>
 
-                <p class="mt-2 line-clamp-3 text-sm/relaxed text-gray-500">
+                <p className="mt-2 line-clamp-3 text-sm/relaxed text-gray-500">
                 {description}
                 </p>
             </div>
@@ -26,10 +25,11 @@ const ArticleCard = ({alt, src, title, description}) =>{
 }
 
 function MainComponent() {
+    const Name = useSelector(state => state.project.name)
     return(
         <div className="items-start">
 
-            <article className="rounded-xl bg-slate-100 p-4 ring-4 ring-blue-400 sm:p-6 lg:p-8">
+            <article className="rounded-xl bg-slate-100 mt-9 p-4 ring-4 ring-blue-400 sm:p-6 lg:p-8">
                 <div className="flex items-start sm:gap-8">
                     <div
                         className="hidden sm:grid sm:size-20 sm:shrink-0 sm:place-content-center sm:rounded-full sm:border-2 sm:border-slate-300 bg-slate-200"
@@ -67,10 +67,10 @@ function MainComponent() {
                 <h2 className=" text-xl font-overview font-medium text-slate-800">Funciones en la nube</h2>
             </div>
             
-            <div  class="flex flex-wrap gap-5">
-                <ArticleCard src='https://www.gstatic.com/mobilesdk/230516_mobilesdk/Authentication_-_Discovery_light.png' title='Autenticación de usuarios' description='Una solución de identidad de usuarios' />
+            <div  className="flex flex-wrap gap-5">
+                <ArticleCard src='https://www.gstatic.com/mobilesdk/230516_mobilesdk/Authentication_-_Discovery_light.png' title='Autenticación de usuarios' description='Una solución de identidad de usuarios' href={`/project/${Name}/users`} />
                 <ArticleCard src='https://www.gstatic.com/mobilesdk/230516_mobilesdk/Remote_Config_-_Discovery_light.png' title='Registros del sistema (LOGS)' description='Opten información sobre los regitros del sistema' />
-                <ArticleCard src='https://www.gstatic.com/mobilesdk/230516_mobilesdk/Cloud_Messaging_-_Discovery_light.png' title='Explora las actualizaciones' description='Ver todas nuestras soluciones en el tiempo' />
+                <ArticleCard src='https://www.gstatic.com/mobilesdk/230516_mobilesdk/Cloud_Messaging_-_Discovery_light.png' title='Explora las actualizaciones' description='Ver todas nuestras soluciones en el tiempo' href='/' />
             </div>
             
         </div>
@@ -78,24 +78,3 @@ function MainComponent() {
 }
 
 export default MainComponent
-
-/*
-<StatGroup>
-                <Stat>
-                    <StatLabel>Sent</StatLabel>
-                    <StatNumber>345,670</StatNumber>
-                    <StatHelpText>
-                    <StatArrow type='increase' />
-                    23.36%
-                    </StatHelpText>
-                </Stat>
-                <Stat>
-                    <StatLabel>Clicked</StatLabel>
-                    <StatNumber>45</StatNumber>
-                    <StatHelpText>
-                    <StatArrow type='decrease' />
-                    9.05%
-                    </StatHelpText>
-                </Stat>
-            </StatGroup>
-*/

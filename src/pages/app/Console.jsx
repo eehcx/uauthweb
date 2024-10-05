@@ -1,32 +1,41 @@
 import { useState, useEffect } from "react"
 import { Box, Text, Heading, LinkBox, LinkOverlay, Divider, Grid, GridItem, Breadcrumb, BreadcrumbItem, BreadcrumbLink, BreadcrumbSeparator } from "@chakra-ui/react"
 import { AddIcon, ChevronRightIcon } from '@chakra-ui/icons'
+import { useParams } from "react-router-dom"
+import { useDispatch } from "react-redux"
+import { registerProject, clear } from "../../features/projectSlice"
 
 import '../../components/styles/base.styles.css'
 // Componentes
 import NavigateCard from "../../components/common/NavigateCard"
 
 function ConsolePage () {
+    const dispatch = useDispatch()
+    const { name } = useParams()
+
+    const handleNext = (id, name) => {
+        dispatch(clear());
+        dispatch(registerProject({ id, name }));
+        //console.log(id, name);
+    }
+
     useEffect(() => {
         document.title = 'Consola de autenticación';
     }, []);
+
     const [Proyects, setProyects] = useState([
-        {id: 1, name: "registros", link: "#" },
-        {id: 2, name: "jeeimkg", link: "#" },
-        {id: 3, name: "nitrorestau", link: "#" },
-        {id: 4, name: "ciispalma", link: "#" },
-        {id: 5, name: "dotgames", link: "#" },
-        {id: 6, name: "sucaric", link: "#" },
-        {id: 7, name: "turismotab", link: "#" }
+        {id: 1, name: "registros"},
+        {id: 2, name: "jeeimkg"},
+        {id: 3, name: "nitrorestau"},
+        {id: 4, name: "ciispalma"},
+        {id: 5, name: "dotgames"},
+        {id: 6, name: "sucaric"},
+        {id: 7, name: "turismotab"}
     ])
 
     return (
         <div className="ConsolePage">
-            {/*
-            <Text className='font-logo' fontWeight='bold' marginX={10} paddingTop={15} size='2xl' color='#fafafa'>AUTH</Text>
-            */}
-
-            <Breadcrumb marginX={10} paddingTop={8} paddingBottom={2} color={'#fafafa'} spacing='8px' separator={<ChevronRightIcon color='white' />}>
+            <Breadcrumb marginX={16} paddingTop={10} paddingBottom={2} color={'#fafafa'} spacing='8px' separator={<ChevronRightIcon color='white' />}>
                 <BreadcrumbItem>
                     <BreadcrumbLink href='/'>Inicio</BreadcrumbLink>
                 </BreadcrumbItem>
@@ -45,7 +54,7 @@ function ConsolePage () {
                 }}
                 gap={6} 
                 p={4}
-                marginX={4}
+                marginX={5}
                 flex="1" 
             >
                 <GridItem>
@@ -71,16 +80,15 @@ function ConsolePage () {
                         </LinkOverlay>
                     </LinkBox>
                 </GridItem>
-                {Proyects.map((item, index ) => (
-                    <>
-                        <GridItem key={index}>
-                            <NavigateCard
-                                link={item.link}
-                                name={item.name}
-                                id={item.id}
-                            />
-                        </GridItem>
-                    </>
+                {Proyects.map((item) => (
+                    <GridItem key={item.id}>
+                        <NavigateCard
+                            link={`/project/${item.name}`}
+                            name={item.name}
+                            id={item.id}
+                            onClick={()=>handleNext(item.id, item.name)}
+                        />
+                    </GridItem>
                 ))}
             </Grid>
         </div>

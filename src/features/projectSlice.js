@@ -1,8 +1,8 @@
 import { createSlice } from '@reduxjs/toolkit';
 
 const initialState = {
-    id: 1,
-    name: 'ciispalma',
+    id: 0,
+    name: '',
     plan: 'Plan Auth'
 }
 
@@ -21,5 +21,8 @@ export const projectSlice = createSlice({
     },
 });
 
-export const { registerProject, clear } = projectSlice.actions;
+export const { 
+    registerProject, 
+    clear 
+} = projectSlice.actions;
 export default projectSlice.reducer;
