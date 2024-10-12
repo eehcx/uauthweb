@@ -1,7 +1,7 @@
 import { Text, Heading, LinkBox, LinkOverlay } from "@chakra-ui/react"
 import { IoServerOutline } from "react-icons/io5";
 
-const NavigateCard =({link, name, id, onClick})=> {
+const NavigateCard =({link, name, db, onClick})=> {
     return(
         <LinkBox
             as="article"
@@ -27,7 +27,7 @@ const NavigateCard =({link, name, id, onClick})=> {
                 </Heading>
             </div>
             <Text fontSize="md" fontWeight={500}>
-            {name}-00{id}
+            {db}
             </Text>
         </LinkBox>
     )

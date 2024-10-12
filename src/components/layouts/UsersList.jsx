@@ -1,20 +1,21 @@
 import TableListComponent from "../common/TableList"
+import { Skeleton } from '@chakra-ui/react'
 import { IoPeopleCircleSharp } from "react-icons/io5";
 
+import formatDate from "../../utils/date";
+// Hooks 
+import useGetData from "../../hooks/useGetData";
 function UsersListComponent () { 
-    const headers = ['Identificador', 'Fecha de creación', 'ID usuario']
-    const keys = ['email', 'creationDate', 'id']
+    const { data: users, loading, error } = useGetData('http://localhost:4001/uauth/v1/juliano_87d43/user');
+    
+    const headers = ['Identificador', 'Fecha de creación', 'Fecha de acceso', 'ID de usuario'];
+    const keys = ['email', 'createdAt', 'lastLoginAt', '_id'];
 
-    const data = [
-        { email: 'user1@example.com', creationDate: '22 de febrero 2024', id: 1 },
-        { email: 'user2@example.com', creationDate: '26 de abril 2023', id: 2 },
-        { email: 'user3@example.com', creationDate: '25 de abril 2023', id: 3 },
-        { email: 'user1@example.com', creationDate: '22 de febrero 2024', id: 4 },
-        { email: 'user2@example.com', creationDate: '26 de abril 2023', id: 5 },
-        { email: 'user3@example.com', creationDate: '25 de abril 2023', id: 6 },
-        { email: 'user1@example.com', creationDate: '22 de febrero 2024', id: 7 },
-        { email: 'user2@example.com', creationDate: '26 de abril 2023', id: 8 }
-    ]
+    const transformedUsers = users?.map(user => ({
+        ...user,
+        createdAt: formatDate(user.createdAt), 
+        lastLoginAt: user.lastLoginAt ? formatDate(user.lastLoginAt) : '' 
+    }));
 
     return(
         <div>
@@ -22,7 +23,13 @@ function UsersListComponent () {
                 <IoPeopleCircleSharp size={25} />
                 <h2 className=" text-2xl font-overview font-medium text-slate-800">Usuarios de registrados</h2>
             </div>
-            <TableListComponent caption='Registro de usuarios' data={data} keys={keys} headers={headers} />
+            <Skeleton 
+                isLoaded={!loading}
+                fadeDuration={4}
+                height='50px'
+            >
+                <TableListComponent caption='Registro de usuarios' data={transformedUsers} keys={keys} headers={headers} />
+            </Skeleton>
         </div>
     )
 }

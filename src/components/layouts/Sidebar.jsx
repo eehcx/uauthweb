@@ -1,5 +1,5 @@
 import { Avatar } from "@chakra-ui/react"
-import { IoLogOut, IoOptions, IoPeopleSharp, IoTerminal, IoServer, IoHomeSharp } from "react-icons/io5";
+import { IoLogOut, IoOptions, IoPeopleSharp, IoTerminal, IoServer, IoHomeSharp, IoDocumentText } from "react-icons/io5";
 import { Link, useNavigate } from 'react-router-dom';
 import { useDispatch } from "react-redux";
 import { logout } from "../../features/userSlice";
@@ -45,10 +45,11 @@ function SidebarComponent() {
 
                         <ul className="space-y-1 border-t border-gray-300 pt-4">
                             < SideItem title='Inicio' url='overview' Icon={IoHomeSharp} />
+                            < SideItem title='Plantillas' url='templates' Icon={IoDocumentText} />
                             < SideItem title='Usuarios' url='users' Icon={IoPeopleSharp} />
                             < SideItem title='Registros' url='overview' Icon={IoTerminal} />
                             < SideItem title='Servidor' url='overview' Icon={IoServer} />
-                            < SideItem title='General' url='overview' Icon={IoOptions} />
+                            < SideItem title='Configuración' url='settings' Icon={IoOptions} />
                         </ul>
                     </div>
                 </div>

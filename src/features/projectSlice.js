@@ -1,8 +1,9 @@
 import { createSlice } from '@reduxjs/toolkit';
 
 const initialState = {
-    id: 0,
     name: '',
+    token: '',
+    dbName: '',
     plan: 'Plan Auth'
 }
 
@@ -11,9 +12,10 @@ export const projectSlice = createSlice({
     initialState, 
     reducers: {
         registerProject: (state, action) => {
-            const { id, name } = action.payload;
-            state.id = id;
+            const { name, token, dbName } = action.payload;
             state.name = name;
+            state.token = token;
+            state.dbName = dbName;
         },
         clear: state => {
             Object.assign(state, initialState);

@@ -1,37 +1,34 @@
 import { useState, useEffect } from "react"
 import { Box, Text, Heading, LinkBox, LinkOverlay, Divider, Grid, GridItem, Breadcrumb, BreadcrumbItem, BreadcrumbLink, BreadcrumbSeparator } from "@chakra-ui/react"
 import { AddIcon, ChevronRightIcon } from '@chakra-ui/icons'
-import { useParams } from "react-router-dom"
+//import { useParams } from "react-router-dom"
 import { useDispatch } from "react-redux"
 import { registerProject, clear } from "../../features/projectSlice"
 
 import '../../components/styles/base.styles.css'
 // Componentes
 import NavigateCard from "../../components/common/NavigateCard"
+//hooks
+import useGetData from "../../hooks/useGetData"
 
 function ConsolePage () {
     const dispatch = useDispatch()
-    const { name } = useParams()
-
-    const handleNext = (id, name) => {
-        dispatch(clear());
-        dispatch(registerProject({ id, name }));
-        //console.log(id, name);
-    }
+    //const { name } = useParams()
+    const { data: projects, loading, error } = useGetData('http://localhost:4000/api/user/66fed2840bba5f2a88bfac60/projects');
 
     useEffect(() => {
         document.title = 'Consola de autenticación';
     }, []);
 
-    const [Proyects, setProyects] = useState([
-        {id: 1, name: "registros"},
-        {id: 2, name: "jeeimkg"},
-        {id: 3, name: "nitrorestau"},
-        {id: 4, name: "ciispalma"},
-        {id: 5, name: "dotgames"},
-        {id: 6, name: "sucaric"},
-        {id: 7, name: "turismotab"}
-    ])
+    if (loading) return <p>Cargando proyectos...</p>;
+    if (error) return <p>Error: {error}</p>;
+
+    const handleNext = (name, token, dbName) => {
+        dispatch(clear());
+        dispatch(registerProject({ name, token, dbName }));
+        //console.log(id, name);
+    }
+
 
     return (
         <div className="ConsolePage">
@@ -80,13 +77,13 @@ function ConsolePage () {
                         </LinkOverlay>
                     </LinkBox>
                 </GridItem>
-                {Proyects.map((item) => (
-                    <GridItem key={item.id}>
+                {projects.map((item, index) => (
+                    <GridItem key={index}>
                         <NavigateCard
-                            link={`/project/${item.name}`}
-                            name={item.name}
-                            id={item.id}
-                            onClick={()=>handleNext(item.id, item.name)}
+                            link={`/project/${item.projectName}`}
+                            name={item.projectName}
+                            db={item.dbName}
+                            onClick={()=>handleNext(item.projectName, item.projectToken, item.dbName)}
                         />
                     </GridItem>
                 ))}

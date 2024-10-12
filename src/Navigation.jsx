@@ -11,6 +11,7 @@ import LoginPage from './pages/auth/Login';
 import DashboardPage from './pages/app/Dashboard';
 import MainComponent from './components/layouts/Main';
 import UsersListComponent from './components/layouts/UsersList'
+import SettingsPage from './pages/app/Settings';
 // Aplicación web - Envio de formularios
 import ConsolePage from './pages/app/Console';
 import NewTemplate from './pages/app/forms/NewTemplate';
@@ -34,13 +35,11 @@ function Navigation() {
                 />
                 <Route path="/project/:name" element={isAuthenticated ? <DashboardPage /> : <Navigate to="/login" />}>
                     <Route index element={<Navigate to="overview" />} /> 
+                    <Route path="templates" element={<NewTemplate />} />
                     <Route path="overview" element={<MainComponent />} />
                     <Route path="users" element={<UsersListComponent />} />
+                    <Route path="settings" element={<SettingsPage />} />
                 </Route>
-                <Route 
-                    path="/project/template" 
-                    element={isAuthenticated ? <NewTemplate /> : <Navigate to="/login" />}
-                />
             </Routes>
         </Router>
     )
