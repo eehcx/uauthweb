@@ -9,7 +9,7 @@ const initialState = {
 
 export const projectSlice = createSlice({
     name: 'project',
-    initialState, 
+    initialState,
     reducers: {
         registerProject: (state, action) => {
             const { name, token, dbName } = action.payload;
@@ -23,8 +23,8 @@ export const projectSlice = createSlice({
     },
 });
 
-export const { 
-    registerProject, 
-    clear 
+export const {
+    registerProject,
+    clear
 } = projectSlice.actions;
 export default projectSlice.reducer;

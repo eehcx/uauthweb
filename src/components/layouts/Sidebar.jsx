@@ -3,16 +3,18 @@ import { IoLogOut, IoOptions, IoPeopleSharp, IoTerminal, IoServer, IoHomeSharp, 
 import { Link, useNavigate } from 'react-router-dom';
 import { useDispatch } from "react-redux";
 import { logout } from "../../features/userSlice";
+import { clear } from "../../features/projectSlice"
+import { persistor } from '../../app/store.js';
 
 const SideItem = ({ title, url, Icon }) => {
     return(
         <>
             <li>
-                <Link 
-                    to={url} 
+                <Link
+                    to={url}
                     className="group relative flex justify-center rounded-md px-2 py-1.5 text-slate-400 hover:bg-slate-100 hover:text-slate-500"
                 >
-                    {Icon && <Icon size={22} />} 
+                    {Icon && <Icon size={22} />}
                     <span
                         className="invisible absolute start-full top-1/2 ms-4 -translate-y-1/2 rounded bg-gray-900 px-2 py-1.5 text-xs font-medium text-white group-hover:visible"
                     >
@@ -30,11 +32,15 @@ function SidebarComponent() {
 
     const handleLogout = () => {
         dispatch(logout())
+        dispatch(clear())
+        persistor.purge()
         navigate('/')
     }
 
     return(
-        <div className="flex w-16 flex-col justify-between border-e rounded-l-2xl bg-slate-100 z-50">
+        <div
+        	className="flex w-16 flex-col justify-between border-e rounded-l-2xl bg-slate-100 z-50"
+        >
             <div>
                 <div className="inline-flex size-16 items-center justify-center">
                     <Avatar height={8} width={8} bg='#94a3b8' />
@@ -47,8 +53,8 @@ function SidebarComponent() {
                             < SideItem title='Inicio' url='overview' Icon={IoHomeSharp} />
                             < SideItem title='Plantillas' url='templates' Icon={IoDocumentText} />
                             < SideItem title='Usuarios' url='users' Icon={IoPeopleSharp} />
-                            < SideItem title='Registros' url='overview' Icon={IoTerminal} />
-                            < SideItem title='Servidor' url='overview' Icon={IoServer} />
+                            < SideItem title='Registros' url='logs' Icon={IoTerminal} />
+                            {/*< SideItem title='Servidor' url='overview' Icon={IoServer} />*/}
                             < SideItem title='Configuración' url='settings' Icon={IoOptions} />
                         </ul>
                     </div>

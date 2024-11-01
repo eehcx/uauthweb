@@ -5,6 +5,7 @@ import { useNavigate } from "react-router-dom"
 import '../../components/styles/base.styles.css'
 import TextInput from "../../components/common/TextInput"
 import useRegisterUser from "../../hooks/useRegisterUser"
+import usePostData from "../../hooks/usePostData"
 import { formSteps } from "../../components/forms/FormStep"
 
 const DynamicForm = ({ fields, values, onChange }) => {
@@ -32,7 +33,8 @@ function SignUpPage (){
     const [currentForm, SetCurrentForm] = useState(1)
     const [formData, setFormData] = useState({ email: '', password: '' })
     // Manejo de errores y debug
-    const { registerUser, isLoading, error, success } = useRegisterUser();
+    const { registerUser, isLoading, error, success } = useRegisterUser()
+    const { data, loading, error: e, postData } = usePostData('http://localhost:4000/resources/v1/user')
 
     const handleNext = async (e) => {
         e.preventDefault();
@@ -47,9 +49,11 @@ function SignUpPage (){
         if (currentForm === 1) {
             SetCurrentForm(2);
         } else {
-            const result = await registerUser(formData.email, formData.password);
+            const result = await registerUser(formData.email, formData.password)
+
             if (result) {
-                navigate('/login'); 
+                await postData({ email: formData.email })
+                navigate('/login')
             }
         }
     };
@@ -95,8 +99,8 @@ function SignUpPage (){
                             </Button>
                         </Box>
                     </form>
-
                 </Box>
+                
             </div>
         </>
     )

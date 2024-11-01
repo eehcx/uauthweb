@@ -1,12 +1,15 @@
 import TableListComponent from "../common/TableList"
 import { Skeleton } from '@chakra-ui/react'
 import { IoPeopleCircleSharp } from "react-icons/io5";
+import { useSelector } from "react-redux"
 
 import formatDate from "../../utils/date";
+
 // Hooks 
 import useGetData from "../../hooks/useGetData";
 function UsersListComponent () { 
-    const { data: users, loading, error } = useGetData('http://localhost:4001/uauth/v1/juliano_87d43/user');
+    const project = useSelector(state => state.project);
+    const { data: users, loading, error } = useGetData(`http://localhost:4001/uauth/v1/${project.dbName}/user`);
     
     const headers = ['Identificador', 'Fecha de creación', 'Fecha de acceso', 'ID de usuario'];
     const keys = ['email', 'createdAt', 'lastLoginAt', '_id'];

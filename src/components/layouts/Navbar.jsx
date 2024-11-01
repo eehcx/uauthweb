@@ -11,15 +11,15 @@ function NavbarComponent() {
     const ButtonBar = useSelector(state => state.user)
 
     const navigation = [
-        { title: "Acerca", path: "javascript:void(0)" },
-        { title: "Recursos", path: "javascript:void(0)" },
-        { title: "Docs", path: "javascript:void(0)" },
-        { title: "Blog", path: "javascript:void(0)" }
+        { title: "Acerca", path: "/" }, //javascript:void(0)
+        { title: "Recursos", path: "/" },
+        { title: "Docs", path: "/" },
+        { title: "Blog", path: "/" }
     ]
 
     const Brand = () => (
         <div className="flex items-center justify-between py-5 md:block">
-            <a href="javascript:void(0)">
+            <a href="/">
                 <img
                     src={logo}
                     style={{ width: '30px', height: '30px' }}
@@ -64,8 +64,11 @@ function NavbarComponent() {
                                 })
                             }
                             <li>
-                                <a href={ButtonBar.url}className="flex items-center justify-center gap-x-1 py-2 px-4 text-white font-semibold bg-blue-600 font-overview hover:bg-blue-500 active:bg-blue-700 duration-150 rounded-full md:inline-flex">
-                                    {ButtonBar.title}
+                                <a
+                                    href={ButtonBar.url || '/login'}
+                                    className="flex items-center justify-center gap-x-1 py-2 px-4 text-white font-semibold bg-blue-600 font-overview hover:bg-blue-500 active:bg-blue-700 duration-150 rounded-full md:inline-flex"
+                                >
+                                    {ButtonBar.title || 'Ingresar'}
                                     <ChevronRightIcon />
                                 </a>
                             </li>

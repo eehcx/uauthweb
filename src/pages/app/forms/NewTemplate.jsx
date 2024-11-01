@@ -1,41 +1,83 @@
-import React, { useState, useRef } from "react"
-import { Button } from "@chakra-ui/react"
+import { useState, useRef } from 'react';
+import { Button, useToast } from "@chakra-ui/react"
 import { IoSaveSharp } from "react-icons/io5";
 import Editor from '@monaco-editor/react';
 import { IoLogoGithub } from "react-icons/io5";
 import Ajv from 'ajv';
+import { useSelector } from "react-redux"
 
 //hooks
 import useGetData from "../../../hooks/useGetData"
-
+import usePatchData from "../../../hooks/usePatchData";
 import '../../../components/styles/base.styles.css'
 
 const ajv = new Ajv();
 
 function NewTemplate() {
-    const editorRef = useRef(null);
+    const toast = useToast()
+    const editorRef = useRef(null)
+    const project = useSelector(state => state.project)
 
-    const { data: schema, loading, error } = useGetData('http://localhost:4000/api/schema/6702405f6015df4bd0ea75c0');
+    const { data: schema, loading, error } = useGetData(`http://localhost:9000/resources/v1/project/token/${project.token}/schema`)
+    const { data, loading: patchLoading, error: patchError, patchData } = usePatchData(`http://localhost:9000/resources/v1/schema/project/token/${project.token}`);
+
+    const [formattedSchema, setFormattedSchema] = useState('');
+    const [isValidJson, setIsValidJson] = useState(true);
+
+    const handleUpdate = () => {
+        if (!isValidJson) {
+            showToast("No se puede actualizar: El esquema JSON es inválido.");
+            return;
+        }
+
+        const updatedData = {
+            schema: JSON.parse(formattedSchema)
+        };
+
+        toast({
+            description: "Actualización completada: El esquema es válido.",
+            status: "success",
+            duration: 2000,
+            isClosable: true,
+        });
+
+        patchData(updatedData);
+    };
 
     const handleEditorChange = (value) => {
+        setFormattedSchema(value);
         try {
             const json = JSON.parse(value);
             const valid = ajv.validateSchema(json);
+
+            setIsValidJson(valid);
+
             if (!valid) {
-                console.error("Invalid JSON Schema");
-            } else {
-                console.log("Valid JSON");
+                showToast("Esquema JSON inválido");
             }
+
         } catch (e) {
-            console.error("Invalid JSON format", e);
+            setIsValidJson(false);
+            showToast(`Formato JSON inválido: ${e.message}`);
+        }
+    };
+
+    const showToast = (message) => {
+        if (!toast.isActive('jsonError')) {
+            toast({
+                id: 'jsonError',
+                description: message,
+                status: "error",
+                duration: 1500,
+                isClosable: true,
+            });
         }
     };
 
     if (loading) return <p className="">Cargando plantilla...</p>;
-    if (error) return <p>Error: {error}</p>;
+    //if (error) return <p>Error: {error}</p>;
 
-    const formattedSchema = schema?.schema ? JSON.stringify(schema.schema, null, 2) : '';
-
+    const formattedSchemaFromServer = schema?.schema ? JSON.stringify(schema.schema, null, 2) : '';
     return(
         <div className="flex flex-col" style={{ height: "100vh", width: "100%" }}>
             <div className="flex flex-row items-center justify-between mt-10 mb-3 ">
@@ -54,9 +96,14 @@ function NewTemplate() {
                 <div className="px-4 py-1">
                     <Button
                         leftIcon={<IoSaveSharp size={19} />}
-                        colorScheme="blue"
+                        colorScheme='blue'
+                        variant='ghost'
+                        onClick={handleUpdate}
+                        isLoading={patchLoading}
+                        loadingText='Actualizando...'
+                        disabled={!isValidJson}
                     >
-                        Crear plantilla
+                        Subir plantilla
                     </Button>
                 </div>
             </div>
@@ -65,13 +112,14 @@ function NewTemplate() {
                     height="100%"
                     width="100%"
                     defaultLanguage="json"
-                    defaultValue={formattedSchema}
+                    defaultValue={formattedSchemaFromServer}
                     onChange={handleEditorChange}
                     editorDidMount={(editor) => (editorRef.current = editor)}
                     options={{
-                        fontSize: 15, 
-                        lineHeight: 24, 
-                        wordWrap: 'on', 
+                        scrollBeyondLastLine: false,
+                        fontSize: 15,
+                        lineHeight: 24,
+                        wordWrap: 'on',
                     }}
                 />
             </div>
@@ -80,12 +128,3 @@ function NewTemplate() {
 }
 
 export default NewTemplate
-
-/*
-<Box className="flex justify-start items-center my-10">
-    <Heading fontWeight={500} fontFamily='SUSE' className="font-logo text-gray-200 " as='h1' size='2xl'>
-        Arrojanos tu formato 
-        <span className="hidden lg:inline"> <br /> </span> personalizado de usuario.
-    </Heading>
-</Box>
-*/

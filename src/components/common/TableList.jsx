@@ -12,7 +12,6 @@ function TableListComponent({ caption, data, keys, headers }) {
         navigator.clipboard.writeText(item._id).then(() => {
             setCopiedId(item._id);
             toast({
-                
                 description: "Se copió el ID del usuario al portapapeles.",
                 status: "success",
                 duration: 2000,
@@ -34,9 +33,8 @@ function TableListComponent({ caption, data, keys, headers }) {
     const handleEdit = (item) => {
         console.log('Editar:', item);
     };
-    
+
     const handleDelete = (item) => {
-        // Implementa la lógica para eliminar el item
         console.log('Eliminar:', item);
     };
 
@@ -47,7 +45,10 @@ function TableListComponent({ caption, data, keys, headers }) {
                 <thead>
                     <tr>
                         {headers.map((header, index) => (
-                            <th key={index} className="py-2 px-4 border-b border-zinc-300 text-sm font-overview font-medium text-zinc-600 hover:text-zinc-900 hover:cursor-pointer text-left">
+                            <th
+                                key={index}
+                                className="py-2 px-4 border-b border-zinc-300 text-sm font-overview font-medium text-zinc-600 hover:text-zinc-900 hover:cursor-pointer text-left"
+                            >
                                 {header}
                             </th>
                         ))}
@@ -56,8 +57,8 @@ function TableListComponent({ caption, data, keys, headers }) {
                 </thead>
                 <tbody>
                     {data.map((item, index) => (
-                        <tr 
-                            key={index} 
+                        <tr
+                            key={index}
                             className="hover:bg-zinc-100"
                             onMouseEnter={() => setHoveredRow(index)}
                             onMouseLeave={() => setHoveredRow(null)}
@@ -72,9 +73,12 @@ function TableListComponent({ caption, data, keys, headers }) {
                             ))}
                             <td className="py-4 pr-3 border-b border-zinc-100 text-right text-zinc-500">
                                 <div className={`transition-opacity duration-200 ${hoveredRow === index ? 'opacity-100' : 'opacity-0'}`}>
-                                    <Tooltip label='Copiar ID' fontSize='x-small'>
-                                        <button 
-                                            className="pr-4" 
+                                    <Tooltip
+                                        label='Copiar ID'
+                                        fontSize='x-small'
+                                    >
+                                        <button
+                                            className="pr-4"
                                             onClick={() => handleCopy(item)}
                                             aria-label="Copiar"
                                         >
@@ -91,24 +95,24 @@ function TableListComponent({ caption, data, keys, headers }) {
                                                 borderRadius='full'
                                                 sx={{
                                                     _hover: { backgroundColor: 'rgb(244, 244, 245)' },
-                                                    _focus: { backgroundColor: 'rgb(228, 228, 231)', boxShadow: 'none' }, 
+                                                    _focus: { backgroundColor: 'rgb(228, 228, 231)', boxShadow: 'none' },
                                                 }}
                                             />
                                         </Tooltip>
                                         <MenuList minWidth='100px'>
-                                            <MenuItem 
+                                            <MenuItem
                                                 sx={{
                                                     _hover: { backgroundColor: 'rgb(244, 244, 245)', color: 'rgb(39, 39, 42)' },
-                                                    _focus: { backgroundColor: 'rgb(228, 228, 231)', color: 'rgb(63, 63, 70)' }, 
+                                                    _focus: { backgroundColor: 'rgb(228, 228, 231)', color: 'rgb(63, 63, 70)' },
                                                 }}
                                                 onClick={() => handleEdit(item)}
                                                 fontSize='revert'
                                             >
                                                 Restablecer contraseña
                                             </MenuItem>
-                                            <MenuItem 
+                                            <MenuItem
                                                 sx={{
-                                                    _hover: { backgroundColor: 'rgb(244, 244, 245)', color: 'rgb(39, 39, 42)' }, 
+                                                    _hover: { backgroundColor: 'rgb(244, 244, 245)', color: 'rgb(39, 39, 42)' },
                                                     _focus: { backgroundColor: 'rgb(228, 228, 231)', color: 'rgb(63, 63, 70)' },
                                                 }}
                                                 onClick={() => handleDelete(item)}
@@ -116,10 +120,10 @@ function TableListComponent({ caption, data, keys, headers }) {
                                             >
                                                 Inhabilitar cuenta
                                             </MenuItem>
-                                            <MenuItem 
+                                            <MenuItem
                                                 sx={{
                                                     _hover: { backgroundColor: 'rgb(244, 244, 245)', color: 'rgb(39, 39, 42)' },
-                                                    _focus: { backgroundColor: 'rgb(228, 228, 231)', color: 'rgb(63, 63, 70)' }, 
+                                                    _focus: { backgroundColor: 'rgb(228, 228, 231)', color: 'rgb(63, 63, 70)' },
                                                 }}
                                                 onClick={() => handleDelete(item)}
                                                 fontSize='revert'
@@ -130,7 +134,7 @@ function TableListComponent({ caption, data, keys, headers }) {
                                     </Menu>
                                 </div>
                             </td>
-                            
+
                         </tr>
                     ))}
                 </tbody>

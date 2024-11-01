@@ -12,6 +12,7 @@ import DashboardPage from './pages/app/Dashboard';
 import MainComponent from './components/layouts/Main';
 import UsersListComponent from './components/layouts/UsersList'
 import SettingsPage from './pages/app/Settings';
+import LogsPage from './pages/app/Logs';
 // Aplicación web - Envio de formularios
 import ConsolePage from './pages/app/Console';
 import NewTemplate from './pages/app/forms/NewTemplate';
@@ -38,6 +39,7 @@ function Navigation() {
                     <Route path="templates" element={<NewTemplate />} />
                     <Route path="overview" element={<MainComponent />} />
                     <Route path="users" element={<UsersListComponent />} />
+                    <Route path="logs" element={<LogsPage />} />
                     <Route path="settings" element={<SettingsPage />} />
                 </Route>
             </Routes>
