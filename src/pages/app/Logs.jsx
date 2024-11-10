@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react"
 //import useGetData from "../../hooks/useGetData"
 import { useSelector } from "react-redux"
 import '../../components/styles/base.styles.css'
+import { IoDocumentTextOutline } from "react-icons/io5";
 
 const getLevelColor = (action) => {
     switch (action) {
@@ -17,25 +18,25 @@ function LogsPage() {
     const project = useSelector(state => state.project)
     useEffect(() => {
         const socket = new WebSocket(`ws://localhost:4002/log/v1/${project.dbName}`);
-    
+
         const handleOpen = () => {
             console.log('WebSocket connected');
         };
-    
+
         const handleMessage = (event) => {
             const newLogs = JSON.parse(event.data);
             setLogs((prevLogs) => [...prevLogs, ...newLogs]);
         };
-    
+
         const handleError = (error) => {
             console.error('WebSocket error:', error);
             console.error('WebSocket state:', socket.readyState);
         };
-    
+
         socket.addEventListener('open', handleOpen);
         socket.addEventListener('message', handleMessage);
         socket.addEventListener('error', handleError);
-    
+
         return () => {
             socket.removeEventListener('open', handleOpen);
             socket.removeEventListener('message', handleMessage);
@@ -46,6 +47,18 @@ function LogsPage() {
 
     return(
         <div className="min-h-screen py-5">
+        	<div className="sm:flex sm:items-center sm:gap-2 py-5">
+				<div className="flex items-center gap-1 text-gray-500">
+					<IoDocumentTextOutline size={17} />
+					<p className="text-xs font-medium font-logo">Eventos</p>
+				</div>
+
+				<span className="hidden sm:block" aria-hidden="true">&middot;</span>
+
+				<p className="mt-2 text-xs font-medium font-overview text-gray-500 sm:mt-0">
+				Para más <a href="https://github.com/Peter2k3/microusers" target="_blank" rel="noopener noreferrer" className="underline hover:text-gray-700"> detalles </a>
+				</p>
+            </div>
             <div className="bg-white rounded-lg shadow-lg border border-gray-200 overflow-hidden">
                 <div className="h-[90vh] overflow-y-auto">
                     <table className="w-full font-mono text-sm">
@@ -71,22 +84,3 @@ function LogsPage() {
 }
 
 export default LogsPage
-
-
-/*
-<div className="min-h-screen py-5">
-    <div className="bg-white rounded-lg p-4 shadow-lg border border-gray-200 overflow-hidden">
-        <div className="h-[90vh] overflow-y-auto">
-            <pre className="font-mono text-sm">
-                {logs.map((log, index) => (
-                    <div key={index} className="mb-2">
-                        <span className="text-gray-500 font-logo text-base">{log.createdAt}</span>{' '}
-                        <span className={`font-semibold font-logo text-base ${getLevelColor(log.action)}`}>[{log.action.toUpperCase()}]</span>{' '}
-                        <span className=" font-logo text-base">{log.details}</span>
-                    </div>
-                ))}
-            </pre>
-        </div>
-    </div>
-</div>
-*/

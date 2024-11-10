@@ -72,8 +72,30 @@ function LoginPage (){
                 const session = await response.json();
 
                 if (session) {
-                    console.log(session)
-                    let mongoId = "6722ab42aee47fcafd6a3638"
+                    //console.log(session)
+                    let mongoId = null;
+                    try {
+                        const res = await fetch(`http://localhost:9000/resources/v1/user?email=${session.email}`, {
+                            method: 'GET',
+                        });
+
+                        if (!res.ok) {
+                            throw new Error('No se pudo obtener el mongoId');
+                        }
+
+                        const data = await res.json();
+                        mongoId = data._id;
+                    } catch (error) {
+                        //console.error(error);
+                        toast({
+                            description: "Error al obtener el _id.",
+                            status: "error",
+                            duration: 2000,
+                            isClosable: true,
+                        });
+                        setLoading(false);
+                        return;
+                    }
 
                     dispatch(login({
                         id: mongoId,

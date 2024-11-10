@@ -47,24 +47,26 @@ function RegisterPage() {
                 body: formData,
             });
 
+            const message = await response.json();
+
             if (response.ok) {
-                let token = "208h16d2840bba5f2a88bfac4u"
-                const message = await response.text();
+                let token = message.uuid;
 
                 fetch("http://localhost:4000/resources/v1/project", {
                     method: "POST",
                     headers: { "Content-Type": "application/json" },
                     body: JSON.stringify({
-                    	developerId: user.id,
-                    	projectName: Name,
-                    	projectToken: token
+                        projectNumber: message.idProyecto,
+                        developerId: user.id,
+                        projectName: Name,
+                        projectToken: token
                     })
                 })
                 .then(response => response.json())
-                .then(data => dispatch(registerProject({ name: data.projectName, token: data.projectToken, dbName: data.dbName })))
+                .then(data => dispatch(registerProject({ name: data.projectName, projectNumber: data.projectNumber, token: data.projectToken, dbName: data.dbName })))
                 .catch(error => console.error("Error:", error));
 
-                navigate(`/project/${Name}`);
+                navigate(`/project/${Name}/overview`);
 
                 toast({
                     description: message || "Creado exitosamente",

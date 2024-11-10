@@ -18,16 +18,16 @@ function ConsolePage () {
 
     useEffect(() => {
         document.title = 'Consola de autenticación';
-        console.log(user)
+        //console.log(projects)
     }, []);
 
     if (loading) return <p>Cargando proyectos...</p>;
     if (error) return <p>Error: {error}</p>;
 
-    const handleNext = (name, token, dbName) => {
+    const handleNext = (name, projectNumber, token, dbName) => {
         dispatch(clear());
-        dispatch(registerProject({ name, token, dbName }));
-        //console.log(id, name);
+        dispatch(registerProject({ name, projectNumber, token, dbName }));
+        //console.log(name, number, token, dbName);
     }
 
 
@@ -91,7 +91,7 @@ function ConsolePage () {
                             link={`/project/${item.projectName}`}
                             name={item.projectName}
                             db={item.dbName}
-                            onClick={() => handleNext(item.projectName, item.projectToken, item.dbName)}
+                            onClick={() => handleNext(item.projectName, item.projectNumber, item.projectToken, item.dbName)}
                         />
                     </GridItem>
                 ))}
@@ -101,3 +101,7 @@ function ConsolePage () {
 }
 
 export default ConsolePage
+
+/*
+
+*/
