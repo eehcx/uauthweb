@@ -24,7 +24,7 @@ function RegisterPage() {
     const [isLoading, setIsLoading] = useState(false)
 
     const handleNavigate = async () => {
-        if (Name == "") {
+        if (Name.trim() == "") {
             toast({
                 description: "Tiene que tener un nombre",
                 status: "warning",
@@ -36,45 +36,54 @@ function RegisterPage() {
         try {
             setIsLoading(true)
             const formData = new FormData();
-            //console.log("Usuario: ", user.id, user.email, Name)
 
             formData.append("idUsuario", user.userNumber)
             formData.append("email", CustomEmail || user.email)
             formData.append("projectName", Name)
 
-            const response = await fetch("http://localhost:8080/v1/projects", {
+            const responseSpring = await fetch("http://localhost:8080/v1/projects", {
                 method: "POST",
-                body: formData,
+                body: formData
             });
 
-            const message = await response.json();
-
-            if (response.ok) {
-                let token = message.uuid;
-
-                fetch("http://localhost:4000/resources/v1/project", {
-                    method: "POST",
-                    headers: { "Content-Type": "application/json" },
-                    body: JSON.stringify({
-                        projectNumber: message.idProyecto,
-                        developerId: user.id,
-                        projectName: Name,
-                        projectToken: token
-                    })
-                })
-                .then(response => response.json())
-                .then(data => dispatch(registerProject({ name: data.projectName, projectNumber: data.projectNumber, token: data.projectToken, dbName: data.dbName })))
-                .catch(error => console.error("Error:", error));
-
-                navigate(`/project/${Name}/overview`);
-
-                toast({
-                    description: message || "Creado exitosamente",
-                    status: "success",
-                    duration: 1500,
-                    isClosable: true,
-                });
+            if (!responseSpring.ok) { 
+                throw new Error('Failed to create project in Spring API');
             }
+
+            const message = await responseSpring.json();
+            //console.log("Spring: ", message)
+
+            const responseMongo = await fetch("http://localhost:4000/resources/v1/project", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({
+                    projectNumber: message.idProyecto,
+                    developerId: user.id,
+                    projectName: Name,
+                    projectToken: message.uuid
+                })
+            });
+
+            if (!responseMongo.ok) {
+                throw new Error('Failed to register project in Resource API');
+            }
+
+            const data = await responseMongo.json();
+            dispatch(registerProject({ 
+                name: data.projectName, 
+                projectNumber: data.projectNumber, 
+                token: data.projectToken, 
+                dbName: data.dbName 
+            }))
+
+            navigate(`/project/${Name}/overview`);
+
+            toast({
+                description: "Creado exitosamente",
+                status: "success",
+                duration: 1500,
+                isClosable: true,
+            });
         } catch (error) {
             toast({
                 description: "No se pudo registrar el proyecto",
@@ -82,7 +91,9 @@ function RegisterPage() {
                 duration: 1500,
                 isClosable: true,
             });
-            console.error("Error al enviar los datos:", error);
+            //console.error("Error al enviar los datos:", error);
+        } finally { 
+            setIsLoading(false);
         }
     };
 

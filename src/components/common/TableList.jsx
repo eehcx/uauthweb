@@ -1,5 +1,4 @@
-import React, { useState } from 'react';
-import { IoEllipsisVerticalSharp, IoCopyOutline } from "react-icons/io5";
+import React, { useState, useEffect } from 'react';
 import {
     Tooltip,
     useToast,
@@ -10,10 +9,12 @@ import {
     IconButton
 } from '@chakra-ui/react';
 import '../styles/base.styles.css'
+import { IoEllipsisVerticalSharp, IoCopyOutline } from "react-icons/io5";
 
-function TableListComponent({ caption, data, keys, headers }) {
+function TableListComponent({ caption, data, keys, headers, onDelete }) {
     const toast = useToast()
     const [hoveredRow, setHoveredRow] = useState(null);
+    const [isHovered, setIsHovered] = useState(false);
     const [copiedId, setCopiedId] = useState(null);
 
     const handleCopy = (item) => {
@@ -42,10 +43,6 @@ function TableListComponent({ caption, data, keys, headers }) {
         console.log('Editar:', item);
     };
 
-    const handleDelete = (item) => {
-        console.log('Eliminar:', item);
-    };
-
     return (
         <div className="overflow-x-auto bg-zinc-50 rounded-xl border border-zinc-200 shadow">
             <table className="min-w-full bg-white">
@@ -68,12 +65,12 @@ function TableListComponent({ caption, data, keys, headers }) {
                         <tr>
                             <td
                                 colSpan={keys.length + 1}
-                                className="py-20 px-4 text-center text-zinc-500 font-normal text-sm"
+                                className="py-10 px-4 text-center text-zinc-500 font-normal text-sm"
                             >
                                 No hay datos disponibles
                             </td>
                         </tr>
-                     ) : (
+                    ) : (
                         data.map((item, index) => (
                             <tr
                                 key={index}
@@ -104,7 +101,12 @@ function TableListComponent({ caption, data, keys, headers }) {
                                             </button>
                                         </Tooltip>
                                         <Menu closeOnBlur={true}>
-                                            <Tooltip label='Ver más opciones' fontSize='x-small'>
+                                            <Tooltip 
+                                                label='Ver más opciones' 
+                                                fontSize='x-small'
+                                                isOpen={isHovered}
+                                                hasArrow
+                                            >
                                                 <MenuButton
                                                     as={IconButton}
                                                     aria-label='Opciones'
@@ -115,9 +117,12 @@ function TableListComponent({ caption, data, keys, headers }) {
                                                         _hover: { backgroundColor: 'rgb(244, 244, 245)' },
                                                         _focus: { backgroundColor: 'rgb(228, 228, 231)', boxShadow: 'none' },
                                                     }}
+                                                    onMouseEnter={() => setIsHovered(true)}
+                                                    onMouseLeave={() => setIsHovered(false)} 
                                                 />
                                             </Tooltip>
                                             <MenuList minWidth='100px'>
+                                                {/*
                                                 <MenuItem
                                                     sx={{
                                                         _hover: { backgroundColor: 'rgb(244, 244, 245)', color: 'rgb(39, 39, 42)' },
@@ -128,22 +133,13 @@ function TableListComponent({ caption, data, keys, headers }) {
                                                 >
                                                     Restablecer contraseña
                                                 </MenuItem>
+                                                */}
                                                 <MenuItem
                                                     sx={{
                                                         _hover: { backgroundColor: 'rgb(244, 244, 245)', color: 'rgb(39, 39, 42)' },
                                                         _focus: { backgroundColor: 'rgb(228, 228, 231)', color: 'rgb(63, 63, 70)' },
                                                     }}
-                                                    onClick={() => handleDelete(item)}
-                                                    fontSize='revert'
-                                                >
-                                                    Inhabilitar cuenta
-                                                </MenuItem>
-                                                <MenuItem
-                                                    sx={{
-                                                        _hover: { backgroundColor: 'rgb(244, 244, 245)', color: 'rgb(39, 39, 42)' },
-                                                        _focus: { backgroundColor: 'rgb(228, 228, 231)', color: 'rgb(63, 63, 70)' },
-                                                    }}
-                                                    onClick={() => handleDelete(item)}
+                                                    onClick={() => onDelete(item)}
                                                     fontSize='revert'
                                                 >
                                                     Borrar cuenta
@@ -154,7 +150,7 @@ function TableListComponent({ caption, data, keys, headers }) {
                                 </td>
                             </tr>
                         ))
-                     )}
+                    )}
                 </tbody>
             </table>
         </div>

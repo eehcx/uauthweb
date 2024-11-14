@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react"
-import { Button, Avatar } from "@chakra-ui/react"
+import { Button, Avatar, useToast } from "@chakra-ui/react"
+import { useNavigate } from "react-router-dom"
 import { IoTrashOutline } from "react-icons/io5";
 import '../../components/styles/base.styles.css'
 import { useSelector } from "react-redux"
@@ -16,6 +17,30 @@ const ConfigItem = ({title, value}) => {
 function SettingsPage () {
     const [Users, setUsers] = useState([]);
     const Project = useSelector(state => state.project)
+    const toast = useToast()
+    const navigate = useNavigate()
+
+    const handleDelete = () => {
+        fetch(`http://localhost:4000/resources/v1/project/token/${Project.token}`, {
+            method: "DELETE",
+            headers: { "Content-Type": "application/json" }
+        })
+            .then(response => response.json())
+            .then(data => {
+                //console.log(data);
+                toast({
+                    description: "Proyecto eliminado correctamente",
+                    status: "success",
+                    duration: 2000,
+                    isClosable: true,
+                });
+                
+                navigate(`/console`);
+            })
+            .catch(error => {
+                console.error("Error:", error)
+            });
+    }
 
     useEffect(() => {
         fetch(`http://localhost:8080/v1/projects/${Project.projectNumber}`)
@@ -45,21 +70,22 @@ function SettingsPage () {
 
                         <div className="mt-6 border-t border-gray-100" />
 
-                        <h3 className=" text-sm font-semibold text-black my-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">Entorno</h3>
+                        <h3 className=" text-sm font-semibold text-slate-800 my-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">Entorno</h3>
 
                         <p className="text-sm mb-4 leading-6 text-gray-700 sm:col-span-2 sm:mt-0">Este parámetro de configuración permite personalizar tu proyecto para las diferentes etapas del ciclo de vida de la app</p>
 
                         <ConfigItem title='Tipo de entorno' value='Producción' />
 
+                        {/*<ConfigItem title='Clave secreta' value='.....' />*/}
+
                         <div className="mt-6 border-t border-gray-100" />
 
-                        <h3 className=" text-sm font-semibold text-black my-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">Configuración pública</h3>
+                        <h3 className=" text-sm font-semibold text-slate-800 my-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">Configuración pública</h3>
 
                         <div className="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
                             <dt className="text-sm leading-5 font-overview text-gray-600">Información</dt>
                             <dd className="mt-1 text-sm font-normal leading-6 font-overview text-black sm:col-span-2 sm:mt-0">
-                            Consulta la información pública del proyecto, incluyendo los usuarios registrados y sus roles actuales.
-                            Configura los permisos de cada usuario y asegúrate de que solo tengan acceso a las funciones de autenticación que necesitan. Utiliza esta configuración para personalizar el comportamiento de tu sistema de autenticación y adaptarlo a las necesidades de seguridad de tu aplicación.
+                            Consulta la información pública del proyecto, incluidos usuarios y roles. Configura los permisos para asegurar que cada usuario acceda solo a las funciones necesarias. Personaliza el sistema de autenticación según los requisitos de seguridad de tu aplicación.
                             </dd>
                         </div>
 
@@ -99,6 +125,7 @@ function SettingsPage () {
                     leftIcon={<IoTrashOutline size={20} />}
                     colorScheme="gray"
                     variant="ghost"
+                    onClick={()=>handleDelete()}
                 >
                     Borrar proyecto
                 </Button>

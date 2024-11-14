@@ -39,7 +39,7 @@ function SidebarComponent() {
 
     return(
         <div
-        	className="flex w-16 flex-col justify-between border-e rounded-l-2xl bg-slate-100 z-50"
+            className="flex w-16 flex-col justify-between border-e rounded-l-2xl bg-slate-100 z-50"
         >
             <div>
                 <div className="inline-flex size-16 items-center justify-center">

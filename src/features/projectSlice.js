@@ -5,7 +5,7 @@ const initialState = {
     projectNumber: 0,
     token: '',
     dbName: '',
-    plan: 'Plan Auth'
+    plan: 'Auth'
 }
 
 export const projectSlice = createSlice({

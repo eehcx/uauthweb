@@ -1,4 +1,4 @@
-import { useState, useRef } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { Button, useToast } from "@chakra-ui/react"
 import { IoSaveSharp } from "react-icons/io5";
 import Editor from '@monaco-editor/react';
@@ -6,6 +6,7 @@ import { IoLogoGithub } from "react-icons/io5";
 import Ajv from 'ajv';
 import { useSelector } from "react-redux"
 
+import LoadingLayout from '../../../components/layouts/Loading';
 //hooks
 import useGetData from "../../../hooks/useGetData"
 import usePatchData from "../../../hooks/usePatchData";
@@ -18,12 +19,43 @@ function NewTemplate() {
     const editorRef = useRef(null)
     const project = useSelector(state => state.project)
 
-    const { data: schema, loading, error } = useGetData(`http://localhost:9000/resources/v1/project/token/${project.token}/schema`)
-    const { data, loading: patchLoading, error: patchError, patchData } = usePatchData(`http://localhost:9000/resources/v1/schema/project/token/${project.token}`);
+    const { data: schema, loading, error } = useGetData(`http://localhost:4000/resources/v1/schema/project/token/${project.token}`)
+    const { data, loading: patchLoading, error: patchError, patchData } = usePatchData(`http://localhost:4000/resources/v1/schema/project/token/${project.token}`);
 
     const [formattedSchema, setFormattedSchema] = useState('');
     const [isValidJson, setIsValidJson] = useState(true);
 
+    const handleCreate = () => {
+        if (!isValidJson) {
+            showToast("No se puede crear: Esquema JSON inválido.");
+            return;
+        }
+        try {
+            fetch("http://localhost:4000/resources/v1/schema", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({
+                    projectToken: project.token,
+                    schema: JSON.parse(formattedSchema)
+                })
+            })
+                .then(response => response.json())
+                .then(data => {
+                    //console.log(data);
+                    toast({
+                        description: "Esquema creado correctamente.",
+                        status: "success",
+                        duration: 2000,
+                        isClosable: true,
+                    });
+                })
+                .catch(error => console.error("Error:", error));
+        } catch (error) {
+            setIsValidJson(false);
+            showToast(`Formato JSON inválido: ${error.message}`);
+        }
+    }
+    
     const handleUpdate = () => {
         if (!isValidJson) {
             showToast("No se puede actualizar: El esquema JSON es inválido.");
@@ -74,7 +106,7 @@ function NewTemplate() {
         }
     };
 
-    if (loading) return <p className="">Cargando plantilla...</p>;
+    if (loading) return <LoadingLayout background='#f4f4f5' />;
     //if (error) return <p>Error: {error}</p>;
 
     const formattedSchemaFromServer = schema?.schema ? JSON.stringify(schema.schema, null, 2) : '';
@@ -90,7 +122,7 @@ function NewTemplate() {
                     <span className="hidden sm:block" aria-hidden="true">&middot;</span>
 
                     <p className="mt-2 text-xs font-medium font-overview text-gray-500 sm:mt-0">
-                    Escribe tus <a href="https://github.com/Peter2k3/microusers" target="_blank" rel="noopener noreferrer" className="underline hover:text-gray-700"> JSON schemas</a>
+                    Escribe tus <a href="https://github.com/eehcx/uauth-community-guides" target="_blank" rel="noopener noreferrer" className="underline hover:text-gray-700"> JSON schemas</a>
                     </p>
                 </div>
                 <div className="px-4 py-1">
@@ -98,7 +130,13 @@ function NewTemplate() {
                         leftIcon={<IoSaveSharp size={19} />}
                         colorScheme='blue'
                         variant='ghost'
-                        onClick={handleUpdate}
+                        onClick={() => {
+                            if (!schema || !schema.schema) {
+                                handleCreate(); 
+                            } else {
+                                handleUpdate();
+                            }
+                        }}
                         isLoading={patchLoading}
                         loadingText='Actualizando...'
                         disabled={!isValidJson}

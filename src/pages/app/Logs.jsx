@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react"
+import React, { useState, useEffect, useRef } from "react"
 //import useGetData from "../../hooks/useGetData"
 import { useSelector } from "react-redux"
 import '../../components/styles/base.styles.css'
@@ -14,8 +14,9 @@ const getLevelColor = (action) => {
 }
 
 function LogsPage() {
-    const [logs, setLogs] = useState([]);
+    const [logs, setLogs] = useState([])
     const project = useSelector(state => state.project)
+
     useEffect(() => {
         const socket = new WebSocket(`ws://localhost:4002/log/v1/${project.dbName}`);
 
@@ -47,7 +48,7 @@ function LogsPage() {
 
     return(
         <div className="min-h-screen py-5">
-        	<div className="sm:flex sm:items-center sm:gap-2 py-5">
+            <div className="sm:flex sm:items-center sm:gap-2 py-5">
 				<div className="flex items-center gap-1 text-gray-500">
 					<IoDocumentTextOutline size={17} />
 					<p className="text-xs font-medium font-logo">Eventos</p>

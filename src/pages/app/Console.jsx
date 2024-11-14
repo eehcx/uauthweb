@@ -8,6 +8,7 @@ import { registerProject, clear } from "../../features/projectSlice"
 import '../../components/styles/base.styles.css'
 // Componentes
 import NavigateCard from "../../components/common/NavigateCard"
+import LoadingLayout from "../../components/layouts/Loading"
 //hooks
 import useGetData from "../../hooks/useGetData"
 
@@ -21,7 +22,7 @@ function ConsolePage () {
         //console.log(projects)
     }, []);
 
-    if (loading) return <p>Cargando proyectos...</p>;
+    if (loading) return <LoadingLayout background='#09090b' />;
     if (error) return <p>Error: {error}</p>;
 
     const handleNext = (name, projectNumber, token, dbName) => {
@@ -34,8 +35,8 @@ function ConsolePage () {
     return (
         <div className="ConsolePage">
             <Breadcrumb
-            	marginX={16}
-            	paddingTop={10}
+            	marginX={10}
+            	paddingTop={8}
             	paddingBottom={2}
             	color={'#fafafa'}
             	spacing='8px'
@@ -52,7 +53,7 @@ function ConsolePage () {
             <Grid
                 templateColumns={{
                     base: 'repeat(1, 1fr)',
-                    sm: 'repeat(2, 1fr)',
+                    sm: 'repeat(1, 1fr)',
                     md: 'repeat(3, 1fr)',
                     lg: 'repeat(3, 1fr)',
                     xl: 'repeat(4, 1fr)',
@@ -68,9 +69,14 @@ function ConsolePage () {
                         p={4}
                         rounded='xl'
                         boxShadow='2xl'
-                        bg="gray.900"
+                        bg="#18181b"
                         color="white"
-                        _hover={{ bg: "blue.700", cursor: "pointer" }}
+                        borderWidth="4px"            
+                        borderColor="blue.400"  
+                        _hover={{ 
+                            bg: "#27272a", 
+                            cursor: "pointer" 
+                        }}
                         transition="background-color 0.3s ease"
                         w='100%'
                         minH={{ base: "60px", md: "175px", lg: "175px", xl: "175px" }}
@@ -80,8 +86,15 @@ function ConsolePage () {
                         justifyContent="center"
                         alignItems="center"
                     >
-                        <LinkOverlay href='/console/register'>
+                        <LinkOverlay 
+                            href='/console/register'
+                            //display="flex" 
+                            //flexDirection="column" 
+                            //alignItems="center" 
+                            //justifyContent="center" 
+                        >
                             <AddIcon boxSize={6} />
+                            {/*<p className=" font-bold mt-3">Crear un proyecto</p>*/}
                         </LinkOverlay>
                     </LinkBox>
                 </GridItem>
