@@ -1,58 +1,127 @@
-import { useState, useEffect } from "react"
-import { Breadcrumb, BreadcrumbItem, BreadcrumbLink, Heading, Box, Button } from "@chakra-ui/react"
-import { ChevronRightIcon } from '@chakra-ui/icons'
-import { useNavigate } from "react-router-dom"
+import { useState, useRef } from 'react';
+import { Button, useToast } from "@chakra-ui/react"
+import { IoSaveSharp } from "react-icons/io5";
+import Editor from '@monaco-editor/react';
+import { IoLogoGithub } from "react-icons/io5";
+import Ajv from 'ajv';
+import { useSelector } from "react-redux"
+
+//hooks
+import useGetData from "../../../hooks/useGetData"
+import usePatchData from "../../../hooks/usePatchData";
+import '../../../components/styles/base.styles.css'
+
+const ajv = new Ajv();
 
 function NewTemplate() {
+    const toast = useToast()
+    const editorRef = useRef(null)
+    const project = useSelector(state => state.project)
+
+    const { data: schema, loading, error } = useGetData(`http://localhost:9000/resources/v1/project/token/${project.token}/schema`)
+    const { data, loading: patchLoading, error: patchError, patchData } = usePatchData(`http://localhost:9000/resources/v1/schema/project/token/${project.token}`);
+
+    const [formattedSchema, setFormattedSchema] = useState('');
+    const [isValidJson, setIsValidJson] = useState(true);
 
     const handleUpdate = () => {
-        //
-    }
+        if (!isValidJson) {
+            showToast("No se puede actualizar: El esquema JSON es inválido.");
+            return;
+        }
 
-    useEffect(() => {
-        document.title = 'Nueva plantilla | Autenticación fácil, rápida y gestionable para implementar';
-    }, []);
+        const updatedData = {
+            schema: JSON.parse(formattedSchema)
+        };
+
+        toast({
+            description: "Actualización completada: El esquema es válido.",
+            status: "success",
+            duration: 2000,
+            isClosable: true,
+        });
+
+        patchData(updatedData);
+    };
+
+    const handleEditorChange = (value) => {
+        setFormattedSchema(value);
+        try {
+            const json = JSON.parse(value);
+            const valid = ajv.validateSchema(json);
+
+            setIsValidJson(valid);
+
+            if (!valid) {
+                showToast("Esquema JSON inválido");
+            }
+
+        } catch (e) {
+            setIsValidJson(false);
+            showToast(`Formato JSON inválido: ${e.message}`);
+        }
+    };
+
+    const showToast = (message) => {
+        if (!toast.isActive('jsonError')) {
+            toast({
+                id: 'jsonError',
+                description: message,
+                status: "error",
+                duration: 1500,
+                isClosable: true,
+            });
+        }
+    };
+
+    if (loading) return <p className="">Cargando plantilla...</p>;
+    //if (error) return <p>Error: {error}</p>;
+
+    const formattedSchemaFromServer = schema?.schema ? JSON.stringify(schema.schema, null, 2) : '';
     return(
-        <div className="NewTemplatePage">
-            <Breadcrumb marginX={10} paddingTop={8} paddingBottom={2} color={'#fafafa'} spacing='8px' separator={<ChevronRightIcon color='white' />}>
-                <BreadcrumbItem>
-                    <BreadcrumbLink href='/'>Inicio</BreadcrumbLink>
-                </BreadcrumbItem>
+        <div className="flex flex-col" style={{ height: "100vh", width: "100%" }}>
+            <div className="flex flex-row items-center justify-between mt-10 mb-3 ">
+                <div className="sm:flex sm:items-center sm:gap-2">
+                    <div className="flex items-center gap-1 text-gray-500">
+                        <IoLogoGithub size={17} />
+                        <p className="text-xs font-medium font-logo">Documentación</p>
+                    </div>
 
-                <BreadcrumbItem>
-                    <BreadcrumbLink href='/dashboard'>Dashboard</BreadcrumbLink>
-                </BreadcrumbItem>
+                    <span className="hidden sm:block" aria-hidden="true">&middot;</span>
 
-                <BreadcrumbItem isCurrentPage>
-                    <BreadcrumbLink href='#'>Plantilla</BreadcrumbLink>
-                </BreadcrumbItem>
-            </Breadcrumb>
-
-            <div className="mx-10">
-                <Box className="flex justify-start items-center my-10">
-                    <Heading fontWeight={500} fontFamily='SUSE' className="font-logo text-gray-200 " as='h1' size='2xl'>
-                        Arrojanos tu formato 
-                        <span className="hidden lg:inline"> <br /> </span> personalizado de usuario.
-                    </Heading>
-                </Box>
-
-                <div className="h-40 w-auto flex items-center justify-center">
-                    <label htmlFor="file" className="cursor-pointer rounded-2xl border-zinc-800 border-dashed border text-center p-4 md:p-8">
-                        <svg className="w-10 h-10 mx-auto" viewBox="0 0 41 40" fill="none" xmlns="http://www.w3.org/2000/svg">
-                            <path d="M12.1667 26.6667C8.48477 26.6667 5.5 23.6819 5.5 20C5.5 16.8216 7.72428 14.1627 10.7012 13.4949C10.5695 12.9066 10.5 12.2947 10.5 11.6667C10.5 7.0643 14.231 3.33334 18.8333 3.33334C22.8655 3.33334 26.2288 6.19709 27.0003 10.0016C27.0556 10.0006 27.1111 10 27.1667 10C31.769 10 35.5 13.731 35.5 18.3333C35.5 22.3649 32.6371 25.7279 28.8333 26.5M25.5 21.6667L20.5 16.6667M20.5 16.6667L15.5 21.6667M20.5 16.6667L20.5 36.6667" stroke="#2563eb" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
-                        </svg>
-                        <p className="mt-3 text-gray-700 max-w-xs mx-auto">Da click para <span className="font-medium text-blue-600">subir tu archivo</span> o arrastra el archivo aquí</p>
-                    </label>
-                    <input id="file" type="file" className="hidden" />
+                    <p className="mt-2 text-xs font-medium font-overview text-gray-500 sm:mt-0">
+                    Escribe tus <a href="https://github.com/Peter2k3/microusers" target="_blank" rel="noopener noreferrer" className="underline hover:text-gray-700"> JSON schemas</a>
+                    </p>
                 </div>
-
-                {/*
-                    <Box marginY={8} className="flex justify-center items-center">
-                        <Button colorScheme='blue' size='lg' onClick={handleUpdate} >
-                            Continuar
-                        </Button>
-                    </Box>
-                    */}
+                <div className="px-4 py-1">
+                    <Button
+                        leftIcon={<IoSaveSharp size={19} />}
+                        colorScheme='blue'
+                        variant='ghost'
+                        onClick={handleUpdate}
+                        isLoading={patchLoading}
+                        loadingText='Actualizando...'
+                        disabled={!isValidJson}
+                    >
+                        Subir plantilla
+                    </Button>
+                </div>
+            </div>
+            <div className="flex-1 flex w-full">
+                <Editor
+                    height="100%"
+                    width="100%"
+                    defaultLanguage="json"
+                    defaultValue={formattedSchemaFromServer}
+                    onChange={handleEditorChange}
+                    editorDidMount={(editor) => (editorRef.current = editor)}
+                    options={{
+                        scrollBeyondLastLine: false,
+                        fontSize: 15,
+                        lineHeight: 24,
+                        wordWrap: 'on',
+                    }}
+                />
             </div>
         </div>
     )

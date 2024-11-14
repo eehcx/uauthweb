@@ -1,19 +1,23 @@
 import { createSlice } from '@reduxjs/toolkit';
 
 const initialState = {
-    id: 1,
-    name: 'ciispalma',
+    name: '',
+    projectNumber: 0,
+    token: '',
+    dbName: '',
     plan: 'Plan Auth'
 }
 
 export const projectSlice = createSlice({
     name: 'project',
-    initialState, 
+    initialState,
     reducers: {
         registerProject: (state, action) => {
-            const { id, name } = action.payload;
-            state.id = id;
+            const { name, projectNumber, token, dbName } = action.payload;
             state.name = name;
+            state.projectNumber = projectNumber;
+            state.token = token;
+            state.dbName = dbName;
         },
         clear: state => {
             Object.assign(state, initialState);
@@ -21,5 +25,8 @@ export const projectSlice = createSlice({
     },
 });
 
-export const { registerProject, clear } = projectSlice.actions;
+export const {
+    registerProject,
+    clear
+} = projectSlice.actions;
 export default projectSlice.reducer;

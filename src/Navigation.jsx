@@ -9,11 +9,16 @@ import SignUpPage from './pages/auth/SignUp';
 import LoginPage from './pages/auth/Login';
 // Aplicación web
 import DashboardPage from './pages/app/Dashboard';
+import MainComponent from './components/layouts/Main';
+import UsersListComponent from './components/layouts/UsersList'
+import SettingsPage from './pages/app/Settings';
+import LogsPage from './pages/app/Logs';
+// Aplicación web - Envio de formularios
 import ConsolePage from './pages/app/Console';
 import NewTemplate from './pages/app/forms/NewTemplate';
 
 function Navigation() {
-    const isAuthenticated = useSelector(state => state.auth.isAuthenticated)
+    const isAuthenticated = useSelector(state => state.user.isAuthenticated)
     console.log(isAuthenticated)
     return(
         <Router>
@@ -23,20 +28,20 @@ function Navigation() {
                 <Route path="/login" element={<LoginPage />} />
                 <Route 
                     path="/console" 
-                    element={<ConsolePage />} /*{isAuthenticated ? <ConsolePage /> : <Navigate to="/login" />} */
+                    element={isAuthenticated ? <ConsolePage /> : <Navigate to="/login" />} /*{<ConsolePage />} */
                 />
                 <Route 
                     path="/console/register" 
-                    element={<RegisterPage />} 
+                    element={isAuthenticated ? <RegisterPage /> : <Navigate to="/login" />}
                 />
-                <Route 
-                    path="/dashboard" 
-                    element={<DashboardPage />} 
-                />
-                <Route 
-                    path="/dashboard/template" 
-                    element={<NewTemplate /> } 
-                />
+                <Route path="/project/:name" element={isAuthenticated ? <DashboardPage /> : <Navigate to="/login" />}>
+                    <Route index element={<Navigate to="overview" />} /> 
+                    <Route path="templates" element={<NewTemplate />} />
+                    <Route path="overview" element={<MainComponent />} />
+                    <Route path="users" element={<UsersListComponent />} />
+                    <Route path="logs" element={<LogsPage />} />
+                    <Route path="settings" element={<SettingsPage />} />
+                </Route>
             </Routes>
         </Router>
     )

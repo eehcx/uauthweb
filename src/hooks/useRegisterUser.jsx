@@ -14,7 +14,7 @@ const useRegisterUser = () => {
         const { signal } = controller;
 
         try {
-            const response = await fetch('http://localhost:8080/user', {
+            const response = await fetch('http://localhost:8080/users/v1', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
