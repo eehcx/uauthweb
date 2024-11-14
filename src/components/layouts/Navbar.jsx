@@ -1,21 +1,22 @@
-import { useState, useEffect } from "react"
-import { Text, Divider } from "@chakra-ui/react"
-import { ChevronRightIcon, HamburgerIcon, CloseIcon } from '@chakra-ui/icons'
+import { ChevronRightIcon, CloseIcon, HamburgerIcon } from '@chakra-ui/icons'
+import { Divider } from "@chakra-ui/react"
+import { useState } from "react"
 import { useSelector } from "react-redux"
 
-import '../styles/base.styles.css'
 import logo from '../../assets/react.svg'
+import '../styles/base.styles.css'
 
-function NavbarComponent() {
-    const [state, setState] = useState(false)
-    const ButtonBar = useSelector(state => state.user)
+function NavbarComponent({ changePage }) {
+    const [state, setState] = useState(false);
+    const ButtonBar = useSelector(state => state.user);
 
     const navigation = [
-        { title: "Acerca", path: "/" }, //javascript:void(0)
+        { title: "Inicio", path: "/" },
+        { title: "Acerca", path: "/" },
         { title: "Recursos", path: "/" },
         { title: "Docs", path: "/" },
-        { title: "Blog", path: "/" }
-    ]
+        { title: "Precios", path: "/" }
+    ];
 
     const Brand = () => (
         <div className="flex items-center justify-between py-5 md:block">
@@ -30,38 +31,33 @@ function NavbarComponent() {
                 <button className="menu-btn text-gray-400 hover:text-gray-300"
                     onClick={() => setState(!state)}
                 >
-                    {
-                        state ? (
-                            <CloseIcon/>
-                        ) : (
-                            <HamburgerIcon/>
-                        )
-                    }
+                    {state ? <CloseIcon /> : <HamburgerIcon />}
                 </button>
             </div>
         </div>
-    )
+    );
 
-    return(
-        <div className="bg-09">
+    return (
+        <div className="bg-09 sticky top-0">
             <div className={`md:hidden ${state ? "mx-2 pb-2" : "hidden"}`}>
                 <Brand />
             </div>
             <nav className={`pb-2 md:text-sm ${state ? "absolute z-20 top-0 inset-x-0 bg-zinc-900 rounded-xl mx-2 mt-2 md:mx-0 md:mt-0 md:relative md:bg-transparent" : ""}`}>
                 <div className="gap-x-14 items-center max-w-screen-xl mx-auto px-4 md:flex md:px-8">
                     <Brand />
-                    <div className={`flex-1 items-center mt-8 md:mt-0 md:flex ${state ? 'block' : 'hidden'} `}>
-                    <ul className="flex-1 justify-end items-center space-y-6 md:flex md:space-x-6 md:space-y-0">
+                    <div className={`flex-1 items-center mt-8 md:mt-0 md:flex ${state ? 'block' : 'hidden'}`}>
+                        <ul className="flex-1 justify-end items-center space-y-6 md:flex md:space-x-6 md:space-y-0">
                             {
-                                navigation.map((item, idx) => {
-                                    return (
-                                        <li key={idx} className="text-gray-300 font-bold font-overview hover:text-blue-500">
-                                            <a href={item.path} className="block">
-                                                {item.title}
-                                            </a>
-                                        </li>
-                                    )
-                                })
+                                navigation.map((item, idx) => (
+                                    <li key={idx} className="text-gray-300 font-bold font-overview hover:text-blue-500">
+                                        <a
+                                            onClick={() => changePage(idx)} // Cambiado a una función de flecha
+                                            className="block"
+                                        >
+                                            {item.title}
+                                        </a>
+                                    </li>
+                                ))
                             }
                             <li>
                                 <a
@@ -78,7 +74,8 @@ function NavbarComponent() {
             </nav>
             <Divider borderColor="gray.800" />
         </div>
-    )
+    );
 }
 
 export default NavbarComponent
+;
