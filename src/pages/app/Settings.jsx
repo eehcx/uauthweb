@@ -20,27 +20,42 @@ function SettingsPage () {
     const toast = useToast()
     const navigate = useNavigate()
 
-    const handleDelete = () => {
-        fetch(`http://localhost:4000/resources/v1/project/token/${Project.token}`, {
-            method: "DELETE",
-            headers: { "Content-Type": "application/json" }
-        })
-            .then(response => response.json())
-            .then(data => {
-                //console.log(data);
-                toast({
-                    description: "Proyecto eliminado correctamente",
-                    status: "success",
-                    duration: 2000,
-                    isClosable: true,
-                });
-                
-                navigate(`/console`);
-            })
-            .catch(error => {
-                console.error("Error:", error)
+    const handleDelete = async () => {
+        try {
+            const response1 = await fetch(`http://localhost:4000/resources/v1/project/token/${Project.token}`, {
+                method: "DELETE",
+                headers: { "Content-Type": "application/json" },
             });
-    }
+            if (!response1.ok) {
+                throw new Error('Error al eliminar en la primera API');
+            }
+    
+            const response2 = await fetch(`http://localhost:8080/v1/projects?idProject=${Project.projectNumber}`, {
+                method: "DELETE",
+                headers: { "Content-Type": "application/json" },
+            });
+            if (!response2.ok) {
+                throw new Error('Error al eliminar en la segunda API');
+            }
+    
+            toast({
+                description: "Proyecto eliminado correctamente",
+                status: "success",
+                duration: 2000,
+                isClosable: true,
+            });
+            
+            navigate(`/console`);
+        } catch (error) {
+            console.error("Error:", error);
+            toast({
+                description: "Hubo un error al eliminar el proyecto",
+                status: "error",
+                duration: 2000,
+                isClosable: true,
+            });
+        }
+    };      
 
     useEffect(() => {
         fetch(`http://localhost:8080/v1/projects/${Project.projectNumber}`)
@@ -125,7 +140,7 @@ function SettingsPage () {
                     leftIcon={<IoTrashOutline size={20} />}
                     colorScheme="gray"
                     variant="ghost"
-                    onClick={()=>handleDelete()}
+                    onClick={() => handleDelete()}
                 >
                     Borrar proyecto
                 </Button>

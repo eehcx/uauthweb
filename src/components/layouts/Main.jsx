@@ -70,7 +70,7 @@ function MainComponent() {
             <div  className="flex flex-wrap gap-5">
                 <ArticleCard src='https://www.gstatic.com/mobilesdk/230516_mobilesdk/Authentication_-_Discovery_light.png' title='Autenticación de usuarios' description='Una solución de identidad de usuarios' href={`/project/${Name}/users`} />
                 <ArticleCard src='https://www.gstatic.com/mobilesdk/230516_mobilesdk/Remote_Config_-_Discovery_light.png' title='Registros del sistema (LOGS)' description='Opten información sobre los regitros del sistema' href={`/project/${Name}/logs`} />
-                <ArticleCard src='https://www.gstatic.com/mobilesdk/230516_mobilesdk/Cloud_Messaging_-_Discovery_light.png' title='Explora las actualizaciones' description='Ver todas nuestras soluciones en el tiempo' href='/' />
+                <ArticleCard src='https://www.gstatic.com/mobilesdk/230516_mobilesdk/Cloud_Messaging_-_Discovery_light.png' title='Explora las actualizaciones' description='Ver todas nuestras soluciones en el tiempo' href='/docs' />
             </div>
             
         </div>

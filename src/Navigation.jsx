@@ -3,7 +3,11 @@ import React from 'react';
 import { BrowserRouter as Router, Route, Routes, Navigate } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 // Paginas de la web
-import HomePage from "./pages/Home"
+import HomePage from "./pages/Home";
+import AboutPage from './pages/landing/About';
+import ResourcesPage from "./pages/landing/Resourses";
+import DocsPage from "./pages/landing/Docs";
+import PricingPage from './pages/landing/Pricing';
 import RegisterPage from './pages/auth/Register';
 import SignUpPage from './pages/auth/SignUp';
 import LoginPage from './pages/auth/Login';
@@ -19,13 +23,18 @@ import NewTemplate from './pages/app/forms/NewTemplate';
 
 function Navigation() {
     const isAuthenticated = useSelector(state => state.user.isAuthenticated)
-    console.log(isAuthenticated)
+    //console.log(isAuthenticated)
     return(
         <Router>
             <Routes>
                 <Route path="/" element={<HomePage />} />
                 <Route path="/signup" element={<SignUpPage />} />
                 <Route path="/login" element={<LoginPage />} />
+                <Route path="/about" element={<AboutPage />} />
+                <Route path="/resources" element={<ResourcesPage />} />
+                <Route path="/docs" element={<DocsPage />} />
+                <Route path="/pricing" element={<PricingPage />} />
+
                 <Route 
                     path="/console" 
                     element={isAuthenticated ? <ConsolePage /> : <Navigate to="/login" />} /*{<ConsolePage />} */

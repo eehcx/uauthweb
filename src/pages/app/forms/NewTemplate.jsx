@@ -107,7 +107,6 @@ function NewTemplate() {
     };
 
     if (loading) return <LoadingLayout background='#f4f4f5' />;
-    //if (error) return <p>Error: {error}</p>;
 
     const formattedSchemaFromServer = schema?.schema ? JSON.stringify(schema.schema, null, 2) : '';
     return(

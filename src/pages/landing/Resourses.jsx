@@ -1,9 +1,13 @@
 import { Box, Heading, Text, VStack, SimpleGrid, Icon, Link } from '@chakra-ui/react';
 import { FaBook, FaHeadset, FaServer, FaShieldAlt, FaFileAlt } from 'react-icons/fa';
+import NavbarComponent from "../../components/layouts/Navbar"
+import Footer from "../landing/HomeFooter";
 
-const Resources = () => {
+const ResourcesPage = () => {
     return (
-        <Box bg="gray.800" color="gray.200" minHeight="100vh" px={10} py={20}>
+        <>
+        <NavbarComponent/>
+        <Box bg="#121212" color="gray.200" minHeight="100vh" px={10} py={20}>
             <VStack spacing={8} textAlign="center" mb={12}>
                 <Heading size="2xl" color="white">Recursos</Heading>
                 <Text fontSize="xl" color="gray.400" maxW="3xl">
@@ -14,7 +18,7 @@ const Resources = () => {
             <SimpleGrid columns={{ base: 1, md: 2, lg: 3 }} spacing={10}>
 
                 {/* Documentación */}
-                <VStack bg="gray.800" p={6} borderRadius="md" textAlign="center">
+                <VStack bg="#121212" p={6} borderRadius="md" textAlign="center">
                     <Icon as={FaBook} w={8} h={8} color="blue.600" />
                     <Heading size="md" mt={4} color="white">Documentación</Heading>
                     <Text mt={2} color="gray.400">
@@ -26,7 +30,7 @@ const Resources = () => {
                 </VStack>
 
                 {/* Soporte */}
-                <VStack bg="gray.800" p={6} borderRadius="md" textAlign="center">
+                <VStack bg="#121212" p={6} borderRadius="md" textAlign="center">
                     <Icon as={FaHeadset} w={8} h={8} color="blue.600" />
                     <Heading size="md" mt={4} color="white">Soporte</Heading>
                     <Text mt={2} color="gray.400">
@@ -38,7 +42,7 @@ const Resources = () => {
                 </VStack>
 
                 {/* Estado del Sistema */}
-                <VStack bg="gray.800" p={6} borderRadius="md" textAlign="center">
+                <VStack bg="#121212" p={6} borderRadius="md" textAlign="center">
                     <Icon as={FaServer} w={8} h={8} color="blue.600" />
                     <Heading size="md" mt={4} color="white">Estado del Sistema</Heading>
                     <Text mt={2} color="gray.400">
@@ -50,7 +54,7 @@ const Resources = () => {
                 </VStack>
 
                 {/* Seguridad y Cumplimiento */}
-                <VStack bg="gray.800" p={6} borderRadius="md" textAlign="center">
+                <VStack bg="#121212" p={6} borderRadius="md" textAlign="center">
                     <Icon as={FaShieldAlt} w={8} h={8} color="blue.600" />
                     <Heading size="md" mt={4} color="white">Seguridad y Cumplimiento</Heading>
                     <Text mt={2} color="gray.400">
@@ -62,7 +66,7 @@ const Resources = () => {
                 </VStack>
 
                 {/* Política de Privacidad */}
-                <VStack bg="gray.800" p={6} borderRadius="md" textAlign="center">
+                <VStack bg="#121212" p={6} borderRadius="md" textAlign="center">
                     <Icon as={FaFileAlt} w={8} h={8} color="blue.600" />
                     <Heading size="md" mt={4} color="white">Política de Privacidad</Heading>
                     <Text mt={2} color="gray.400">
@@ -75,7 +79,9 @@ const Resources = () => {
 
             </SimpleGrid>
         </Box>
+        <Footer/>
+        </>
     );
 };
 
-export default Resources;
+export default ResourcesPage;

@@ -1,31 +1,39 @@
 import { ChevronRightIcon, CloseIcon, HamburgerIcon } from '@chakra-ui/icons'
-import { Divider } from "@chakra-ui/react"
-import { useState } from "react"
+import { Divider, Text } from "@chakra-ui/react"
+import { useState, useEffect } from "react"
 import { useSelector } from "react-redux"
+import { useNavigate } from 'react-router-dom';
 
-import logo from '../../assets/react.svg'
 import '../styles/base.styles.css'
 
 function NavbarComponent({ changePage }) {
     const [state, setState] = useState(false);
+    const [isVisible, setIsVisible] = useState(true);
     const ButtonBar = useSelector(state => state.user);
+    const navigate = useNavigate();
 
     const navigation = [
-        { title: "Inicio", path: "/" },
-        { title: "Acerca", path: "/" },
-        { title: "Recursos", path: "/" },
-        { title: "Docs", path: "/" },
-        { title: "Precios", path: "/" }
+        { title: "Acerca", path: "/about" },
+        { title: "Recursos", path: "/resources" },
+        { title: "Docs", path: "/docs" },
+        { title: "Precios", path: "/pricing" }
     ];
+
+    const handleNavigation = (route) => {
+        navigate(route); 
+    };
 
     const Brand = () => (
         <div className="flex items-center justify-between py-5 md:block">
             <a href="/">
+                {/*
                 <img
                     src={logo}
                     style={{ width: '30px', height: '30px' }}
                     alt="logo de empresa"
                 />
+                */}
+                <Text fontFamily='SUSE' fontWeight={600} fontSize={25} color='white' >upcauth</Text>
             </a>
             <div className="md:hidden">
                 <button className="menu-btn text-gray-400 hover:text-gray-300"
@@ -37,8 +45,25 @@ function NavbarComponent({ changePage }) {
         </div>
     );
 
+    useEffect(() => {
+        let lastScrollY = window.scrollY;
+
+        const handleScroll = () => {
+            if (window.scrollY > lastScrollY) {
+                setIsVisible(false); 
+            } else {
+                setIsVisible(true);
+            }
+            lastScrollY = window.scrollY;
+        };
+
+        window.addEventListener('scroll', handleScroll);
+
+        return () => window.removeEventListener('scroll', handleScroll);
+    }, []);
+
     return (
-        <div className="bg-09 sticky top-0">
+        <div className={`bg-[#121212] sticky top-0 z-50 transition-transform duration-300 ${isVisible ? 'transform translate-y-0' : 'transform -translate-y-full'}`} >
             <div className={`md:hidden ${state ? "mx-2 pb-2" : "hidden"}`}>
                 <Brand />
             </div>
@@ -49,9 +74,9 @@ function NavbarComponent({ changePage }) {
                         <ul className="flex-1 justify-end items-center space-y-6 md:flex md:space-x-6 md:space-y-0">
                             {
                                 navigation.map((item, idx) => (
-                                    <li key={idx} className="text-gray-300 font-bold font-overview hover:text-blue-500">
+                                    <li key={idx} className="text-gray-300 font-bold font-overview hover:text-blue-500 cursor-pointer">
                                         <a
-                                            onClick={() => changePage(idx)} // Cambiado a una función de flecha
+                                            onClick={() => handleNavigation(item.path)}
                                             className="block"
                                         >
                                             {item.title}
@@ -62,7 +87,7 @@ function NavbarComponent({ changePage }) {
                             <li>
                                 <a
                                     href={ButtonBar.url || '/login'}
-                                    className="flex items-center justify-center gap-x-1 py-2 px-4 text-white font-semibold bg-blue-600 font-overview hover:bg-blue-500 active:bg-blue-700 duration-150 rounded-full md:inline-flex"
+                                    className="flex items-center justify-center gap-x-1 py-1 pl-3 pr-2 text-white font-semibold bg-zinc-800 font-overview border border-zinc-700 hover:bg-zinc-700 active:bg-zinc-700 duration-150 rounded-lg md:inline-flex"
                                 >
                                     {ButtonBar.title || 'Ingresar'}
                                     <ChevronRightIcon />
@@ -77,5 +102,4 @@ function NavbarComponent({ changePage }) {
     );
 }
 
-export default NavbarComponent
-;
+export default NavbarComponent;

@@ -1,9 +1,10 @@
 import { Box, Divider, Grid, HStack, Link, Text, VStack } from '@chakra-ui/react';
 import { FaDiscord, FaGithub, FaTwitter, FaYoutube } from 'react-icons/fa';
+import '../../components/styles/base.styles.css'
 
 const Footer = () => {
   return (
-    <Box bg="gray.900" color="gray.400" py={10} px={{ base: 4, md: 10 }}>
+    <Box bg="#0f0f0f" color="gray.400" py={10} px={{ base: 4, md: 10 }}>
       <VStack spacing={4} textAlign="center">
         <Text fontSize="sm" color="gray.500">
           Protegemos tus datos. Más información en Seguridad
@@ -14,9 +15,8 @@ const Footer = () => {
       </VStack>
 
       <Grid templateColumns={{ base: '1fr', md: 'repeat(4, 1fr)' }} gap={6} mt={10}>
-        {/* Logo y redes sociales */}
         <VStack align="start">
-          <Text fontSize="lg" color="blue.400" fontWeight="bold">UPCAuth</Text>
+          <Text fontSize="lg" fontFamily='SUSE' color="gray.100" fontWeight="bold">upcauth</Text>
           <HStack spacing={4}>
             <Link href="https://github.com" isExternal>
               <FaGithub size="24px" />
@@ -33,7 +33,6 @@ const Footer = () => {
           </HStack>
         </VStack>
 
-        {/* Sección de Producto */}
         <VStack align="start">
           <Text fontSize="md" color="gray.500" fontWeight="bold">Producto</Text>
           <Link href="#auth">Autenticación</Link>
@@ -43,7 +42,6 @@ const Footer = () => {
           <Link href="#pricing">Precios</Link>
         </VStack>
 
-        {/* Sección de Recursos */}
         <VStack align="start">
           <Text fontSize="md" color="gray.500" fontWeight="bold">Recursos</Text>
           <Link href="#support">Soporte</Link>
@@ -53,7 +51,6 @@ const Footer = () => {
           <Link href="#privacy">Política de Privacidad</Link>
         </VStack>
 
-        {/* Sección de Compañía */}
         <VStack align="start">
           <Text fontSize="md" color="gray.500" fontWeight="bold">Compañía</Text>
           <Link href="#about">Sobre Nosotros</Link>
@@ -64,7 +61,7 @@ const Footer = () => {
         </VStack>
       </Grid>
 
-      <Divider my={6} borderColor="gray.700" />
+      <Divider my={6} borderColor="#71717a" />
 
       <VStack spacing={2}>
         <Text fontSize="sm" color="gray.500">
