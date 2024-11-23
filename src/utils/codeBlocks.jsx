@@ -68,3 +68,17 @@ export const getUser =
         "isAdmin": true
     }
 ]`;
+
+/*
+{
+    "type": "object",
+    "properties": {
+        "displayName": {
+        "type": "string"
+        }
+    },
+    "required": [
+        "displayName"
+    ]
+}
+*/

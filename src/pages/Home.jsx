@@ -36,7 +36,7 @@ function HomePage() {
                             size="md"
                             border="1px solid"
                             borderColor="#3b82f6"
-                            onClick={()=> navigate('/signup')}
+                            onClick={()=> navigate('/console/register')}
                         >
                             Inicia un proyecto
                         </Button>

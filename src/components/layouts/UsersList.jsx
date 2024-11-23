@@ -6,27 +6,48 @@ import { useSelector } from "react-redux"
 
 import formatDate from "../../utils/date";
 import LoadingLayout from "./Loading";
-// Hooks 
-import useGetData from "../../hooks/useGetData";
 
 function UsersListComponent () { 
     const project = useSelector(state => state.project);
-    const { data: users, loading, error } = useGetData(`http://localhost:4001/uauth/v1/user/${project.dbName}`);
+    const [error, setError] = useState(null);
+    const [loading, setLoading] = useState(true);
     const [userList, setUserList] = useState([]); 
     const toast = useToast()
 
     useEffect(() => {
-        if (users) {
-            setUserList(users); 
-        }
-    }, [users]);
+        const fetchData = async () => {
+            try {
+                const response = await fetch('http://localhost:4001/uauth/v1/user/', {
+                    method: "GET",
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'x-project-token': `${project.token}`
+                    }
+                });
+                
+                //const response = await fetch(`http://localhost:4001/uauth/v1/user/${project.dbName}`);
+                
+                if (!response.ok) {
+                    throw new Error("Error al consultar la API");
+                }
+                const result = await response.json();
+                setUserList(result); 
+            } catch (err) {
+                console.log(err)
+            } finally {
+                setLoading(false); 
+            }
+        };
+    
+        fetchData();
+    }, []);
 
     const handleDelete = (item) => {
         fetch(`http://localhost:4001/uauth/v1/user/${item._id}`, {
             method: 'DELETE',
             headers: {
                 'Content-Type': 'application/json',
-                'x-database-name': `${project.dbName}`
+                'x-project-token': `${project.token}`
             }
         })
             .then(response => {

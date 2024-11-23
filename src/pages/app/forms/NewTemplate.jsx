@@ -121,7 +121,7 @@ function NewTemplate() {
                     <span className="hidden sm:block" aria-hidden="true">&middot;</span>
 
                     <p className="mt-2 text-xs font-medium font-overview text-gray-500 sm:mt-0">
-                    Escribe tus <a href="https://github.com/eehcx/uauth-community-guides" target="_blank" rel="noopener noreferrer" className="underline hover:text-gray-700"> JSON schemas</a>
+                    Escribe tus <a href="/docs" target="_blank" rel="noopener noreferrer" className="underline hover:text-gray-700"> JSON schemas</a>
                     </p>
                 </div>
                 <div className="px-4 py-1">
